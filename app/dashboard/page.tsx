@@ -54,10 +54,10 @@ const mockTrades = [
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground mt-2">
           Overview of your trading performance and analytics
         </p>
       </div>
@@ -67,20 +67,22 @@ export default function DashboardPage() {
         {summaryCards.map((card) => {
           const Icon = card.icon
           return (
-            <Card key={card.title}>
+            <Card key={card.title} className="border-border/50 hover:border-primary/50 transition-colors">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
                   {card.title}
                 </CardTitle>
-                <Icon className="h-4 w-4 text-muted-foreground" />
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Icon className="h-4 w-4 text-primary" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{card.value}</div>
+                <div className="text-2xl font-bold tracking-tight">{card.value}</div>
                 <p
-                  className={`text-xs ${
+                  className={`text-xs mt-1 ${
                     card.trend === "up"
-                      ? "text-green-600"
-                      : "text-red-600"
+                      ? "text-green-600 dark:text-green-500"
+                      : "text-red-600 dark:text-red-500"
                   }`}
                 >
                   {card.change} from last month
@@ -92,12 +94,12 @@ export default function DashboardPage() {
       </div>
 
       {/* Chart Section */}
-      <Card>
+      <Card className="border-border/50">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <CardTitle>Performance Overview</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-xl">Performance Overview</CardTitle>
+              <CardDescription className="mt-1">
                 Your trading performance over time
               </CardDescription>
             </div>
@@ -113,7 +115,7 @@ export default function DashboardPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed bg-muted/50">
+          <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed border-border/50 bg-muted/30">
             <p className="text-sm text-muted-foreground">
               Chart placeholder - Performance visualization would appear here
             </p>
@@ -122,52 +124,54 @@ export default function DashboardPage() {
       </Card>
 
       {/* Trades Table */}
-      <Card>
+      <Card className="border-border/50">
         <CardHeader>
-          <CardTitle>Recent Trades</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-xl">Recent Trades</CardTitle>
+          <CardDescription className="mt-1">
             Your most recent trading activity
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Symbol</TableHead>
-                <TableHead>Result</TableHead>
-                <TableHead className="text-right">P/L</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockTrades.map((trade, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">{trade.date}</TableCell>
-                  <TableCell>{trade.symbol}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-                        trade.result === "Win"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
+          <div className="rounded-md border border-border/50">
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Date</TableHead>
+                  <TableHead>Symbol</TableHead>
+                  <TableHead>Result</TableHead>
+                  <TableHead className="text-right">P/L</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {mockTrades.map((trade, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">{trade.date}</TableCell>
+                    <TableCell className="font-mono">{trade.symbol}</TableCell>
+                    <TableCell>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
+                          trade.result === "Win"
+                            ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                            : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+                        }`}
+                      >
+                        {trade.result}
+                      </span>
+                    </TableCell>
+                    <TableCell
+                      className={`text-right font-semibold ${
+                        trade.pnl.startsWith("+")
+                          ? "text-green-600 dark:text-green-500"
+                          : "text-red-600 dark:text-red-500"
                       }`}
                     >
-                      {trade.result}
-                    </span>
-                  </TableCell>
-                  <TableCell
-                    className={`text-right font-medium ${
-                      trade.pnl.startsWith("+")
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {trade.pnl}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                      {trade.pnl}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
