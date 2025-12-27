@@ -28,27 +28,27 @@ const features = [
 
 export function Features() {
   return (
-    <section id="features" className="container py-20 md:py-32">
-      <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
-        <h2 className="text-3xl font-bold leading-[1.1] sm:text-3xl md:text-4xl">
+    <section id="features" className="container py-24 md:py-32">
+      <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center mb-16">
+        <h2 className="text-3xl font-bold leading-[1.1] sm:text-3xl md:text-4xl lg:text-5xl">
           Everything you need to analyze your trades
         </h2>
-        <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
+        <p className="max-w-[85%] leading-relaxed text-muted-foreground sm:text-lg sm:leading-7">
           Powerful features designed to help you understand your trading
           performance and improve your strategies.
         </p>
       </div>
-      <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-4 mt-12">
+      <div className="mx-auto grid justify-center gap-6 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-4">
         {features.map((feature) => {
           const Icon = feature.icon
           return (
-            <Card key={feature.title}>
+            <Card key={feature.title} className="border-border/50 hover:border-primary/50 transition-colors">
               <CardHeader>
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 dark:bg-primary/20">
                   <Icon className="h-6 w-6 text-primary" />
                 </div>
-                <CardTitle>{feature.title}</CardTitle>
-                <CardDescription>{feature.description}</CardDescription>
+                <CardTitle className="text-xl">{feature.title}</CardTitle>
+                <CardDescription className="text-base leading-relaxed">{feature.description}</CardDescription>
               </CardHeader>
             </Card>
           )

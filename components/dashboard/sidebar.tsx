@@ -53,17 +53,18 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-40 h-screen w-64 border-r bg-background transition-transform lg:translate-x-0",
+          "fixed top-0 left-0 z-40 h-screen w-64 border-r border-border/40 bg-background transition-transform lg:translate-x-0",
           isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
         <div className="flex h-full flex-col">
-          <div className="flex h-16 items-center border-b px-6">
+          <div className="flex h-16 items-center border-b border-border/40 px-6">
             <Link href="/dashboard" className="flex items-center space-x-2">
-              <span className="text-xl font-bold">TradeAnalytics</span>
+              <div className="h-5 w-5 rounded bg-primary"></div>
+              <span className="text-xl font-semibold tracking-tight">TradeAnalytics</span>
             </Link>
           </div>
-          <nav className="flex-1 space-y-1 p-4">
+          <nav className="flex-1 space-y-1.5 p-4">
             {navigation.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href
@@ -73,9 +74,9 @@ export function Sidebar() {
                   href={item.href}
                   onClick={() => setIsMobileOpen(false)}
                   className={cn(
-                    "flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    "flex items-center space-x-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
                     isActive
-                      ? "bg-primary text-primary-foreground"
+                      ? "bg-primary text-primary-foreground shadow-sm"
                       : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                   )}
                 >
