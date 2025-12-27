@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
@@ -10,7 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { TrendingUp, TrendingDown, DollarSign, Target } from "lucide-react"
+import { PerformanceChart } from "@/components/dashboard/performance-chart"
+import { TrendingUp, TrendingDown, DollarSign, Target, ArrowUpRight, ArrowDownRight } from "lucide-react"
 
 const summaryCards = [
   {
@@ -19,6 +21,9 @@ const summaryCards = [
     change: "+12.5%",
     trend: "up",
     icon: DollarSign,
+    bgColor: "bg-blue-500/10 dark:bg-blue-500/20",
+    iconColor: "text-blue-600 dark:text-blue-400",
+    borderColor: "border-blue-200 dark:border-blue-800",
   },
   {
     title: "Win Rate",
@@ -26,6 +31,9 @@ const summaryCards = [
     change: "+2.1%",
     trend: "up",
     icon: Target,
+    bgColor: "bg-emerald-500/10 dark:bg-emerald-500/20",
+    iconColor: "text-emerald-600 dark:text-emerald-400",
+    borderColor: "border-emerald-200 dark:border-emerald-800",
   },
   {
     title: "Net P/L",
@@ -33,6 +41,9 @@ const summaryCards = [
     change: "+8.3%",
     trend: "up",
     icon: TrendingUp,
+    bgColor: "bg-purple-500/10 dark:bg-purple-500/20",
+    iconColor: "text-purple-600 dark:text-purple-400",
+    borderColor: "border-purple-200 dark:border-purple-800",
   },
   {
     title: "Avg Risk/Reward",
@@ -40,6 +51,9 @@ const summaryCards = [
     change: "-0.2",
     trend: "down",
     icon: TrendingDown,
+    bgColor: "bg-amber-500/10 dark:bg-amber-500/20",
+    iconColor: "text-amber-600 dark:text-amber-400",
+    borderColor: "border-amber-200 dark:border-amber-800",
   },
 ]
 
@@ -53,6 +67,8 @@ const mockTrades = [
 ]
 
 export default function DashboardPage() {
+  const [selectedTimeframe, setSelectedTimeframe] = useState("1W")
+
   return (
     <div className="space-y-8">
       <div>
@@ -66,27 +82,41 @@ export default function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {summaryCards.map((card) => {
           const Icon = card.icon
+          const TrendIcon = card.trend === "up" ? ArrowUpRight : ArrowDownRight
           return (
-            <Card key={card.title} className="border-border/50 hover:border-primary/50 transition-colors">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+            <Card 
+              key={card.title} 
+              className={`border ${card.borderColor} hover:border-opacity-60 transition-all duration-200 hover:shadow-md`}
+            >
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   {card.title}
                 </CardTitle>
-                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Icon className="h-4 w-4 text-primary" />
+                <div className={`h-10 w-10 rounded-lg ${card.bgColor} flex items-center justify-center`}>
+                  <Icon className={`h-5 w-5 ${card.iconColor}`} />
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tracking-tight">{card.value}</div>
-                <p
-                  className={`text-xs mt-1 ${
-                    card.trend === "up"
-                      ? "text-green-600 dark:text-green-500"
-                      : "text-red-600 dark:text-red-500"
-                  }`}
-                >
-                  {card.change} from last month
-                </p>
+              <CardContent className="space-y-2">
+                <div className="text-3xl font-bold tracking-tight text-foreground">{card.value}</div>
+                <div className="flex items-center gap-1.5">
+                  <TrendIcon 
+                    className={`h-3.5 w-3.5 ${
+                      card.trend === "up"
+                        ? "text-emerald-600 dark:text-emerald-500"
+                        : "text-red-600 dark:text-red-500"
+                    }`}
+                  />
+                  <span
+                    className={`text-sm font-medium ${
+                      card.trend === "up"
+                        ? "text-emerald-600 dark:text-emerald-500"
+                        : "text-red-600 dark:text-red-500"
+                    }`}
+                  >
+                    {card.change}
+                  </span>
+                  <span className="text-xs text-muted-foreground">from last month</span>
+                </div>
               </CardContent>
             </Card>
           )
@@ -98,28 +128,24 @@ export default function DashboardPage() {
         <CardHeader>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <CardTitle className="text-xl">Performance Overview</CardTitle>
-              <CardDescription className="mt-1">
+              <CardTitle className="text-xl font-semibold">Performance Overview</CardTitle>
+              <CardDescription className="mt-1.5">
                 Your trading performance over time
               </CardDescription>
             </div>
-            <Tabs defaultValue="1M" className="w-auto">
-              <TabsList>
-                <TabsTrigger value="1D">1D</TabsTrigger>
-                <TabsTrigger value="1W">1W</TabsTrigger>
-                <TabsTrigger value="1M">1M</TabsTrigger>
-                <TabsTrigger value="3M">3M</TabsTrigger>
-                <TabsTrigger value="1Y">1Y</TabsTrigger>
+            <Tabs value={selectedTimeframe} onValueChange={setSelectedTimeframe} className="w-auto">
+              <TabsList className="grid w-full grid-cols-5">
+                <TabsTrigger value="1D" className="text-xs">1D</TabsTrigger>
+                <TabsTrigger value="1W" className="text-xs">1W</TabsTrigger>
+                <TabsTrigger value="1M" className="text-xs">1M</TabsTrigger>
+                <TabsTrigger value="3M" className="text-xs">3M</TabsTrigger>
+                <TabsTrigger value="1Y" className="text-xs">1Y</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed border-border/50 bg-muted/30">
-            <p className="text-sm text-muted-foreground">
-              Chart placeholder - Performance visualization would appear here
-            </p>
-          </div>
+        <CardContent className="pt-6">
+          <PerformanceChart />
         </CardContent>
       </Card>
 
